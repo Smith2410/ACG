@@ -20,13 +20,37 @@ class Pedido extends Model
         // OJO: la línea correcta para obtener el último ID
         return $this->db->lastInsertId();
     }
+    
     public function find($id)
-{
-    return $this->query(
-        "SELECT * FROM pedidos WHERE id = ?",
-        [$id],
-        true
-    );
-}
+    {
+        return $this->query(
+            "SELECT * FROM pedidos WHERE id = ?",
+            [$id],
+            true
+        );
+    }
+
+    public function porUsuario($usuario_id)
+    {
+        return $this->query(
+            "SELECT * FROM pedidos WHERE usuario_id = ? ORDER BY id DESC",
+            [$usuario_id]
+        );
+    }
+    public function porRepartidor($repartidor_id)
+    {
+        return $this->query(
+            "SELECT * FROM pedidos WHERE repartidor_id = ? ORDER BY id DESC",
+            [$repartidor_id]
+        );
+    }
+
+    public function actualizarEstado($id, $estado)
+    {
+        return $this->query(
+            "UPDATE pedidos SET estado = ? WHERE id = ?",
+            [$estado, $id]
+        );
+    }
 
 }
