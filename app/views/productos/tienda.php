@@ -7,7 +7,7 @@
     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="card h-100 shadow-sm zoom-hover">
 
-            <img src="<?= BASE_URL ?>img/<?= $p['imagen'] ?>"
+            <img src="<?= BASE_URL ?>img/productos/<?= $p['imagen'] ?>"
                  class="card-img-top"
                  style="height:180px; object-fit:cover;">
 
@@ -20,8 +20,8 @@
                 </h4>
 
                 <a href="<?= BASE_URL ?>carrito/agregar/<?= $p['id'] ?>" class="btn btn-success">
-    Agregar al carrito
-</a>
+                    Agregar al carrito
+                </a>
 
 
             </div>

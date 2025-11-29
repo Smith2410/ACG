@@ -6,7 +6,10 @@
 
     <!-- BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <!-- ANIMACIONES -->
     <style>
         .zoom-hover {
@@ -31,8 +34,8 @@
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/menu">ACG Store</a>
-            <a href="/carrito" class="btn btn-outline-light ms-auto">🛒 Carrito</a>
+            <a class="navbar-brand" href="<?= BASE_URL ?>menu">ACG Store</a>
+            <a href="<?= BASE_URL ?>carrito" class="btn btn-outline-light ms-auto">🛒 Carrito</a>
         </div>
     </nav>
 

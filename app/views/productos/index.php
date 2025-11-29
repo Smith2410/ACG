@@ -53,61 +53,61 @@
 <!-- Tabla -->
 <div class="table-responsive bg-white shadow-sm p-3 rounded-3">
 
-<table class="table table-hover align-middle" id="tabla-productos">
-    <thead class="table-light">
-        <tr>
-            <th>#</th>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+    <table class="table table-hover align-middle" id="tabla-productos">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
 
-    <tbody>
+        <tbody>
 
-        <?php foreach($productos as $p): ?>
-        <tr 
-            data-categoria="<?= $p['categoria'] ?>" 
-            data-estado="<?= $p['estado'] ?>"
-        >
-            <td><?= $p['id'] ?></td>
+            <?php foreach($productos as $p): ?>
+            <tr 
+                data-categoria="<?= $p['categoria'] ?>" 
+                data-estado="<?= $p['estado'] ?>"
+            >
+                <td><?= $p['id'] ?></td>
 
-            <td>
-                <img src="<?= BASE_URL ?>img/productos/<?= $p['imagen'] ?>" 
-                     class="rounded" width="70">
-            </td>
+                <td>
+                    <img src="<?= BASE_URL ?>img/productos/<?= $p['imagen'] ?>" 
+                         class="rounded" width="70">
+                </td>
 
-            <td><?= $p['nombre'] ?></td>
-            <td><?= $p['categoria'] ?></td>
-            <td>$<?= number_format($p['precio'],2) ?></td>
+                <td><?= $p['nombre'] ?></td>
+                <td><?= $p['categoria'] ?></td>
+                <td>$<?= number_format($p['precio'],2) ?></td>
 
-            <td>
-                <div class="form-check form-switch">
-                    <input class="form-check-input estado-switch"
-                           type="checkbox"
-                           data-id="<?= $p['id'] ?>"
-                           <?= $p['estado'] == 1 ? 'checked' : '' ?>>
-                </div>
-            </td>
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input estado-switch"
+                               type="checkbox"
+                               data-id="<?= $p['id'] ?>"
+                               <?= $p['estado'] == 1 ? 'checked' : '' ?>>
+                    </div>
+                </td>
 
-            <td>
-                <a href="<?= BASE_URL ?>productos/editar/<?= $p['id'] ?>" 
-                   class="btn btn-primary btn-sm">Editar</a>
+                <td>
+                    <a href="<?= BASE_URL ?>productos/editar/<?= $p['id'] ?>" 
+                       class="btn btn-primary btn-sm">Editar</a>
 
-                <a href="<?= BASE_URL ?>productos/eliminar/<?= $p['id'] ?>" 
-                   class="btn btn-danger btn-sm"
-                   onclick="return confirm('¿Eliminar producto?')">
-                   Eliminar
-                </a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
+                    <a href="<?= BASE_URL ?>productos/eliminar/<?= $p['id'] ?>" 
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('¿Eliminar producto?')">
+                       Eliminar
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
 </div>
 

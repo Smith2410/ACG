@@ -1,8 +1,11 @@
 <?php
 
+
 // Activar errores (solo en desarrollo)
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+
+session_start();
 
 // Autoload simple
 spl_autoload_register(function ($class) {

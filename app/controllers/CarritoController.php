@@ -2,75 +2,87 @@
 
 class CarritoController extends Controller
 {
+    private Producto $producto; // Propiedad declarada
+
     public function __construct()
     {
+        $this->producto = new Producto();
+
+        // Iniciar la sesión si no está iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Inicializar el carrito si no existe
         if (!isset($_SESSION['carrito'])) {
             $_SESSION['carrito'] = [];
         }
-        $this->producto = new Producto();
     }
 
-    // Mostrar el carrito
+    // Mostrar los productos en el carrito
     public function index()
     {
         $carrito = $_SESSION['carrito'];
-        $this->view("carrito/index", compact("carrito"));
+        $this->view("carrito/index", compact('carrito'), "layouts/main");
     }
 
-    // Agregar producto
+    // Agregar un producto al carrito
     public function agregar($id)
     {
-        $producto = $this->producto->find($id);
-
-        if (!$producto) {
-            redirect("productos");
-            return;
+        $item = $this->producto->find($id);
+        if (!$item) {
+            header("Location: " . BASE_URL . "carrito");
+            exit;
         }
 
-        if (!isset($_SESSION['carrito'][$id])) {
-
-            $_SESSION['carrito'][$id] = [
-                "id"        => $producto['id'],
-                "nombre"    => $producto['nombre'],
-                "precio"    => $producto['precio'],
-                "imagen"    => $producto['imagen'],
-                "cantidad"  => 1
-            ];
-
-        } else {
-
+        if (isset($_SESSION['carrito'][$id])) {
             $_SESSION['carrito'][$id]['cantidad']++;
-
+        } else {
+            $_SESSION['carrito'][$id] = [
+                'id' => $item['id'],
+                'nombre' => $item['nombre'],
+                'precio' => $item['precio'],
+                'imagen' => $item['imagen'],
+                'cantidad' => 1
+            ];
         }
 
-        redirect("carrito");
+        header("Location: " . BASE_URL . "carrito");
+        exit;
     }
 
-    // Cambiar cantidad
+    // Actualizar la cantidad de un producto
     public function actualizar($id)
     {
-        if (!isset($_SESSION['carrito'][$id])) return;
+        if (isset($_POST['cantidad']) && isset($_SESSION['carrito'][$id])) {
+            $cantidad = (int)$_POST['cantidad'];
+            if ($cantidad > 0) {
+                $_SESSION['carrito'][$id]['cantidad'] = $cantidad;
+            } else {
+                unset($_SESSION['carrito'][$id]); // eliminar si es 0
+            }
+        }
 
-        $cantidad = $_POST['cantidad'] ?? 1;
-
-        if ($cantidad < 1) $cantidad = 1;
-
-        $_SESSION['carrito'][$id]['cantidad'] = $cantidad;
-
-        redirect("carrito");
+        header("Location: " . BASE_URL . "carrito");
+        exit;
     }
 
-    // Quitar producto
-    public function quitar($id)
+    // Eliminar un producto del carrito
+    public function eliminar($id)
     {
-        unset($_SESSION['carrito'][$id]);
-        redirect("carrito");
+        if (isset($_SESSION['carrito'][$id])) {
+            unset($_SESSION['carrito'][$id]);
+        }
+
+        header("Location: " . BASE_URL . "carrito");
+        exit;
     }
 
-    // Vaciar carrito
+    // Vaciar todo el carrito
     public function vaciar()
     {
         $_SESSION['carrito'] = [];
-        redirect("carrito");
+        header("Location: " . BASE_URL . "carrito");
+        exit;
     }
 }
