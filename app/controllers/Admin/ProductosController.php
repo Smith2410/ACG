@@ -1,12 +1,14 @@
 <?php
 
-class ProductosController extends Controller
+namespace Admin;
+
+class ProductosController extends \Controller
 {
     private $producto;
 
     public function __construct()
     {
-        $this->producto = new Producto();
+        $this->producto = new \Producto();
     }
 
     /* Vista cliente */
@@ -18,19 +20,18 @@ class ProductosController extends Controller
 
     /* Admin */
     public function index()
-{
-    $pagina = $_GET['page'] ?? 1;
-    $porPagina = 10;
-    $offset = ($pagina - 1) * $porPagina;
+    {
+        $pagina = $_GET['page'] ?? 1;
+        $porPagina = 10;
+        $offset = ($pagina - 1) * $porPagina;
 
-    $productos = $this->producto->paginate($porPagina, $offset);
+        $productos = $this->producto->paginate($porPagina, $offset);
 
-    $categorias = (new Categoria())->activas(); // ✔ correcto
-    
+        $categorias = (new \Categoria())->activas(); // ✔ correcto
+        
 
-    $this->view("productos/index", compact("productos", "categorias", "pagina"));
-}
-
+        $this->view("admin/productos/index", compact("productos", "categorias"), "admin");
+    }
     
     // Cargar Imagen
     private function subirImagen()
@@ -60,7 +61,7 @@ class ProductosController extends Controller
 
     public function crear()
     {
-        $categoriaModel = new Categoria();
+        $categoriaModel = new \Categoria();
         $categorias = $categoriaModel->activas();
 
         $this->view("productos/crear", compact("categorias"));
@@ -80,7 +81,7 @@ class ProductosController extends Controller
     {
         $producto = $this->producto->find($id);
 
-        $categoriaModel = new Categoria();
+        $categoriaModel = new \Categoria();
         $categorias = $categoriaModel->activas();
 
         $this->view("productos/editar", compact("producto", "categorias"));
@@ -157,9 +158,7 @@ class ProductosController extends Controller
             }
         }
 
-        // Borrar de la BD: si tu modelo hace soft-delete, añade método para borrado físico
-        // Si tu modelo ya hace borrado físico con delete($id), úsalo.
-        $this->producto->destroy($id); // ver modelo abajo
+        $this->producto->destroy($id);
 
         // Redirigir
         redirect("productos");

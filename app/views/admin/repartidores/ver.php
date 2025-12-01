@@ -43,10 +43,10 @@
 
             <form action="<?= BASE_URL ?>repartidorPedidos/estado/<?= $pedido['id'] ?>" method="POST">
                 <select name="estado" class="form-select mb-3">
-                    <option value="pendiente"   <?= $pedido['estado']=='pendiente'?'selected':'' ?>>Pendiente</option>
+                    <option value="pendiente" <?= $pedido['estado']=='pendiente'?'selected':'' ?>>Pendiente</option>
                     <option value="preparando" <?= $pedido['estado']=='preparando'?'selected':'' ?>>Preparando</option>
-                    <option value="camino"     <?= $pedido['estado']=='camino'?'selected':'' ?>>En camino</option>
-                    <option value="entregado"  <?= $pedido['estado']=='entregado'?'selected':'' ?>>Entregado</option>
+                    <option value="camino" <?= $pedido['estado']=='camino'?'selected':'' ?>>En camino</option>
+                    <option value="entregado" <?= $pedido['estado']=='entregado'?'selected':'' ?>>Entregado</option>
                 </select>
 
                 <button class="btn btn-success">

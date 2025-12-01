@@ -1,0 +1,73 @@
+CREATE DATABASE IF NOT EXISTS alcarbongrill CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE alcarbongrill;
+
+-- usuarios
+CREATE TABLE usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  email VARCHAR(120) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  rol ENUM('admin','repartidor','cliente') DEFAULT 'cliente',
+  estado TINYINT(1) DEFAULT 1,
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- categorias
+CREATE TABLE categorias (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT,
+  estado TINYINT(1) DEFAULT 1
+);
+
+-- productos
+CREATE TABLE productos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(150) NOT NULL,
+  descripcion TEXT,
+  precio DECIMAL(10,2) NOT NULL,
+  categoria INT NULL,
+  imagen VARCHAR(255) DEFAULT 'default.png',
+  estado TINYINT(1) DEFAULT 1,
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (categoria) REFERENCES categorias(id) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+-- direcciones
+CREATE TABLE direcciones (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  direccion VARCHAR(255) NOT NULL,
+  referencia TEXT,
+  ciudad VARCHAR(100),
+  estado VARCHAR(100),
+  cp VARCHAR(20),
+  activo TINYINT(1) DEFAULT 1,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- pedidos
+CREATE TABLE pedidos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  direccion_id INT NULL,
+  repartidor_id INT NULL,
+  estado ENUM('pendiente','preparando','camino','entregado','cancelado') DEFAULT 'pendiente',
+  metodo_pago VARCHAR(50) DEFAULT 'efectivo',
+  total DECIMAL(10,2) NOT NULL,
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+  FOREIGN KEY (direccion_id) REFERENCES direcciones(id) ON DELETE SET NULL
+);
+
+-- pedido_detalle
+CREATE TABLE pedido_detalle (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pedido_id INT NOT NULL,
+  producto_id INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+  FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE
+);

@@ -4,6 +4,29 @@ class Pedido extends Model
 {
     protected $table = "pedidos";
 
+    public function all()
+    {
+        return $this->query("SELECT * FROM pedidos ORDER BY id DESC");
+    }
+
+    public function porEstado($estado)
+    {
+        return $this->query(
+            "SELECT * FROM pedidos WHERE estado = ? ORDER BY id DESC",
+            [$estado]
+        );
+    }
+
+    public function cambiarEstado($id, $estado)
+    {
+        return $this->query(
+            "UPDATE pedidos SET estado = ? WHERE id = ?",
+            [$estado, $id]
+        );
+    }
+
+    
+
     public function crear($data)
     {
         $sql = "INSERT INTO pedidos 
@@ -28,6 +51,29 @@ class Pedido extends Model
             [$id],
             true
         );
+    }
+
+    public function count()
+    {
+        $res = $this->query("SELECT COUNT(*) AS total FROM pedidos");
+
+        // Si query devolvió array:
+        if (is_array($res) && isset($res[0]['total'])) {
+            return $res[0]['total'];
+        }
+
+        return 0;
+    }
+
+    public function totalVentas()
+    {
+        $res = $this->query("SELECT SUM(total) AS total FROM pedidos WHERE estado = 'entregado'");
+
+        if (is_array($res) && isset($res[0]['total'])) {
+            return $res[0]['total'] ?? 0;
+        }
+
+        return 0;
     }
 
     public function porUsuario($usuario_id)

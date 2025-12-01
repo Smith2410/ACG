@@ -2,14 +2,30 @@
 
 class Controller
 {
-    protected function view($view, $data = [])
+    protected function view($path, $data = [], $layout = "main")
     {
-        extract($data);
+        // Convertir compact style
+        extract($data, EXTR_SKIP);
 
-        // ruta del archivo real de la vista
-        $viewFile = __DIR__ . "/../views/$view.php";
+        // Soporte para views en app/views/
+        $viewFile = __DIR__ . "/../views/{$path}.php";
 
-        // cargar el layout principal
-        require __DIR__ . "/../views/layouts/main.php";
+        if (!file_exists($viewFile)) {
+            throw new Exception("View not found: $viewFile");
+        }
+
+        ob_start();
+        require $viewFile;
+        $content = ob_get_clean();
+
+        // Cargar layout: app/views/layouts/{layout}.php
+        $layoutFile = __DIR__ . "/../views/layouts/{$layout}.php";
+        if (!file_exists($layoutFile)) {
+            // fallback: echo content
+            echo $content;
+            return;
+        }
+
+        require $layoutFile;
     }
 }

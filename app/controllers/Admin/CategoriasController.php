@@ -1,23 +1,25 @@
 <?php
 
-class CategoriasController extends Controller
+namespace Admin;
+
+class CategoriasController extends \Controller
 {
     private $categoria;
 
     public function __construct()
     {
-        $this->categoria = new Categoria();
+        $this->categoria = new \Categoria();
     }
 
     public function index()
     {
         $categorias = $this->categoria->all();
-        $this->view("categorias/index", compact("categorias"));
+        $this->view("admin/categorias/index", compact("categorias"), "admin");
     }
 
     public function crear()
     {
-        $this->view("categorias/crear");
+        $this->view("admin/categorias/crear", compact("categorias"), "admin");
     }
 
     public function guardar()
@@ -29,7 +31,7 @@ class CategoriasController extends Controller
     public function editar($id)
     {
         $categoria = $this->categoria->find($id);
-        $this->view("categorias/editar", compact("categoria"));
+        $this->view("admin/categorias/editar", compact("categorias"), "admin");
     }
 
     public function actualizar($id)

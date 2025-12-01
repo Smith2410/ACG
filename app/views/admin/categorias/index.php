@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="fw-bold">Categorías</h3>
-    <a href="<?= BASE_URL ?>categorias/crear" class="btn btn-success">+ Nueva Categoría</a>
+    <a href="<?= BASE_URL ?>admin/categorias/crear" class="btn btn-success">+ Nueva Categoría</a>
 </div>
 
 <div class="table-responsive shadow-sm p-3 bg-white rounded-3">

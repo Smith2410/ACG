@@ -1,6 +1,5 @@
 <?php
 
-
 // Activar errores (solo en desarrollo)
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -23,6 +22,9 @@ spl_autoload_register(function ($class) {
     }
 });
 
+$config = require __DIR__ . '/../app/config/config.php';
+
+define('BASE_URL', rtrim($config['base_url'], '/') . '/');
 
 // Helpers
 require __DIR__ . '/../app/core/helpers.php';
