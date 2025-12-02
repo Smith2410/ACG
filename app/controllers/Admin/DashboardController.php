@@ -13,10 +13,6 @@ class DashboardController extends \Controller
         $totalPedidos   = $pedidoModel->count();
         $totalVentas    = $pedidoModel->totalVentas();
 
-        $this->view("admin/index", compact(
-            "totalProductos",
-            "totalPedidos",
-            "totalVentas"
-        ));
+        $this->view("admin/index", compact("totalProductos", "totalPedidos", "totalVentas"), "admin");
     }
 }

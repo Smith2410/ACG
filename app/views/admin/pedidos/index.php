@@ -1,5 +1,3 @@
-<?php ob_start(); ?>
-
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold">Gestión de Pedidos</h3>
 </div>
@@ -67,8 +65,3 @@
 
     </table>
 </div>
-
-<?php 
-$content = ob_get_clean();
-require __DIR__ . "/../../layouts/admin.php";
-?>

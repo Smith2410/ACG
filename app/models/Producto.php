@@ -61,14 +61,22 @@ class Producto extends Model
 
     public function paginate($limit, $offset)
     {
+        // Forzar enteros (protege contra inyección)
+        $limit  = (int) $limit;
+        $offset = (int) $offset;
+
         $sql = "SELECT * FROM productos ORDER BY id DESC LIMIT $limit OFFSET $offset";
-        return $this->query($sql); // importante: SIN fetchAll()
+        return $this->query($sql);
     }
+
 
     public function count()
     {
         $res = $this->query("SELECT COUNT(*) AS total FROM productos");
-        return $res[0]['total'];
+        if (is_array($res) && isset($res[0]['total'])) {
+            return (int)$res[0]['total'];
+        }
+        return 0;
     }
 
     // Soft-delete (marca inactivo)

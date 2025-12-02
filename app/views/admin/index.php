@@ -1,5 +1,3 @@
-<?php ob_start(); ?>
-
 <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h2>
 
 <div class="row">
@@ -27,8 +25,3 @@
         </div>
     </div>
 </div>
-
-<?php
-$content = ob_get_clean();
-require __DIR__ . "/../layouts/admin.php";
-?>

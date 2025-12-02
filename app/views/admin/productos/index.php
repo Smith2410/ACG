@@ -1,179 +1,118 @@
-<style>
-/* Switch verde/rojo */
-.form-check-input:checked {
-    background-color: #28a745 !important;
-    border-color: #28a745 !important;
-}
-.form-check-input:not(:checked) {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-}
-</style>
+<?php ob_start(); ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold">Productos</h3>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-basket"></i> Productos</h2>
     <a href="<?= BASE_URL ?>admin/productos/crear" class="btn btn-success">
-        + Nuevo Producto
+        <i class="bi bi-plus-lg"></i> Nuevo producto
     </a>
 </div>
 
-<!-- Filtros -->
-<div class="row mb-3">
-    
-    <!-- Buscador -->
-    <div class="col-md-4 mb-2">
-        <input type="text" id="buscador" class="form-control" placeholder="Buscar productos...">
-    </div>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table align-middle table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($productos as $p): ?>
+                    <tr>
+                        <td style="width:110px">
+                            <img src="<?= BASE_URL ?>img/productos/<?= htmlspecialchars($p['imagen']) ?>" alt="" class="img-fluid rounded" style="max-height:70px">
+                        </td>
+                        <td><?= htmlspecialchars($p['nombre']) ?></td>
+                        <td>
+                            <?php
+                                $catName = '';
+                                if (!empty($p['categoria'])) {
+                                    $c = array_filter($categorias, fn($c) => $c['id'] == $p['categoria']);
+                                    if (!empty($c)) {
+                                        $first = array_values($c)[0];
+                                        $catName = $first['nombre'];
+                                    }
+                                }
+                                echo htmlspecialchars($catName);
+                            ?>
+                        </td>
+                        <td>$<?= number_format($p['precio'], 2) ?></td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input estado-switch" type="checkbox" role="switch"
+                                       data-id="<?= $p['id'] ?>"
+                                       <?= $p['estado'] == 1 ? 'checked' : '' ?>>
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <a href="<?= BASE_URL ?>admin/productos/editar/<?= $p['id'] ?>" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
 
-    <!-- Filtro categoría -->
-    <div class="col-md-4 mb-2">
-        <select id="filtro-categoria" class="form-select">
-            <option value="">Todas las categorías</option>
-            <?php if (!empty($categorias)): ?>
-                <?php foreach($categorias as $c): ?>
-                    <option value="<?= strtolower($c['id']) ?>">
-                        <?= $c['nombre'] ?>
-                    </option>
+                            <a href="<?= BASE_URL ?>admin/productos/eliminar/<?= $p['id'] ?>"
+                               onclick="return confirm('¿Eliminar este producto? Se borrará la imagen si existe.')"
+                               class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
-            <?php endif; ?>
-        </select>
-    </div>
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Filtro estado -->
-    <div class="col-md-4 mb-2">
-        <select id="filtro-estado" class="form-select">
-            <option value="">Todos</option>
-            <option value="1">Activos</option>
-            <option value="0">Inactivos</option>
-        </select>
-    </div>
+        <!-- Paginación simple -->
+        <?php
+        $total = (new \Producto())->count();
+        $pages = ceil($total / $porPagina);
+        if ($pages > 1):
+        ?>
+        <nav class="mt-3">
+            <ul class="pagination">
+                <?php for ($i=1;$i<=$pages;$i++): ?>
+                <li class="page-item <?= $i==$pagina ? 'active' : '' ?>">
+                    <a class="page-link" href="<?= BASE_URL ?>admin/productos?page=<?= $i ?>"><?= $i ?></a>
+                </li>
+                <?php endfor; ?>
+            </ul>
+        </nav>
+        <?php endif; ?>
 
+    </div>
 </div>
 
-<!-- Tabla -->
-<div class="table-responsive bg-white shadow-sm p-3 rounded-3">
+<?php
+$content = ob_get_clean();
+require __DIR__ . "/../../layouts/admin.php";
+?>
 
-    <table class="table table-hover align-middle" id="tabla-productos">
-        <thead class="table-light">
-            <tr>
-                <th>#</th>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            <?php foreach($productos as $p): ?>
-            <tr 
-                data-categoria="<?= $p['categoria'] ?>" 
-                data-estado="<?= $p['estado'] ?>"
-            >
-                <td><?= $p['id'] ?></td>
-
-                <td>
-                    <img src="<?= BASE_URL ?>img/productos/<?= $p['imagen'] ?>" 
-                         class="rounded" width="70">
-                </td>
-
-                <td><?= $p['nombre'] ?></td>
-                <td><?= $p['categoria'] ?></td>
-                <td>$<?= number_format($p['precio'],2) ?></td>
-
-                <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input estado-switch"
-                               type="checkbox"
-                               data-id="<?= $p['id'] ?>"
-                               <?= $p['estado'] == 1 ? 'checked' : '' ?>>
-                    </div>
-                </td>
-
-                <td>
-                    <a href="<?= BASE_URL ?>admin/productos/editar/<?= $p['id'] ?>" 
-                       class="btn btn-primary btn-sm">Editar</a>
-
-                    <a href="<?= BASE_URL ?>admin/productos/eliminar/<?= $p['id'] ?>" 
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('¿Eliminar producto?')">
-                       Eliminar
-                    </a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-
-        </tbody>
-    </table>
-
-</div>
-
-<!-- Paginación -->
-<?php if (!empty($totalPaginas)): ?>
-<nav class="mt-3">
-    <ul class="pagination">
-        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-            <li class="page-item <?= $pagina == $i ? 'active' : '' ?>">
-                <a class="page-link" href="<?= BASE_URL ?>productos?page=<?= $i ?>">
-                    <?= $i ?>
-                </a>
-            </li>
-        <?php endfor; ?>
-    </ul>
-</nav>
-<?php endif; ?>
-
+<!-- JS para switch -->
 <script>
-// ---------------------
-// Buscador en vivo
-// ---------------------
-document.getElementById('buscador').addEventListener('keyup', function() {
-    const texto = this.value.toLowerCase();
-    document.querySelectorAll('#tabla-productos tbody tr').forEach(fila => {
-        fila.style.display = fila.innerText.toLowerCase().includes(texto) ? '' : 'none';
-    });
-});
+document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.estado-switch').forEach(function(el){
+        el.addEventListener('change', function(){
+            const id = this.dataset.id;
+            const estado = this.checked ? 1 : 0;
 
-// ---------------------
-// Filtro por categoría y estado
-// ---------------------
-function aplicarFiltros() {
-    const cat = document.getElementById('filtro-categoria').value;
-    const estado = document.getElementById('filtro-estado').value;
-
-    document.querySelectorAll('#tabla-productos tbody tr').forEach(fila => {
-        const filaCat = fila.dataset.categoria;
-        const filaEstado = fila.dataset.estado;
-
-        let mostrar = true;
-
-        if (cat && filaCat != cat) mostrar = false;
-        if (estado && filaEstado != estado) mostrar = false;
-
-        fila.style.display = mostrar ? "" : "none";
-    });
-}
-
-document.getElementById('filtro-categoria').addEventListener('change', aplicarFiltros);
-document.getElementById('filtro-estado').addEventListener('change', aplicarFiltros);
-
-// ---------------------
-// Switch AJAX
-// ---------------------
-document.querySelectorAll('.estado-switch').forEach(sw => {
-    sw.addEventListener('change', async function () {
-        const id = this.dataset.id;
-        const estado = this.checked ? 1 : 0;
-
-        const formData = new FormData();
-        formData.append('estado', estado);
-
-        await fetch("<?= BASE_URL ?>admin/productos/cambiarEstado/" + id, {
-            method: "POST",
-            body: formData
+            fetch('<?= BASE_URL ?>admin/productos/cambiarEstado/' + id, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'estado=' + encodeURIComponent(estado)
+            })
+            .then(r => r.json())
+            .then(json => {
+                if (json.status !== 'ok') {
+                    alert('Error actualizando estado');
+                }
+            })
+            .catch(err => {
+                alert('Error de red');
+            });
         });
     });
 });
