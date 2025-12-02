@@ -4,7 +4,7 @@
     <div class="card-body">
         <h2 class="fw-bold mb-4">Nuevo Producto</h2>
 
-        <form action="<?= BASE_URL ?>productos/guardar" method="POST" class="row g-3" enctype="multipart/form-data">
+        <form action="<?= BASE_URL ?>admin/productos/guardar" method="POST" class="row g-3" enctype="multipart/form-data">
 
             <div class="col-md-6">
                 <label class="form-label fw-bold">Nombre</label>

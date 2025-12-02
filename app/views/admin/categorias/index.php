@@ -25,10 +25,10 @@
                     </span>
                 </td>
                 <td>
-                    <a href="<?= BASE_URL ?>categorias/editar/<?= $c['id'] ?>"
+                    <a href="<?= BASE_URL ?>admin/categorias/editar/<?= $c['id'] ?>"
                        class="btn btn-primary btn-sm">Editar</a>
 
-                    <a href="<?= BASE_URL ?>categorias/eliminar/<?= $c['id'] ?>"
+                    <a href="<?= BASE_URL ?>admin/categorias/eliminar/<?= $c['id'] ?>"
                        class="btn btn-danger btn-sm"
                        onclick="return confirm('¿Eliminar categoría?')">Eliminar</a>
                 </td>

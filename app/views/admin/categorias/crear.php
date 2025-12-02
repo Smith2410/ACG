@@ -1,6 +1,6 @@
 <h3 class="fw-bold mb-3">Nueva Categoría</h3>
 
-<form action="<?= BASE_URL ?>categorias/guardar" method="POST" class="row g-3">
+<form action="<?= BASE_URL ?>admin/categorias/guardar" method="POST" class="row g-3">
 
     <div class="col-md-6">
         <label class="form-label fw-bold">Nombre</label>

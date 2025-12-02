@@ -12,7 +12,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold">Productos</h3>
-    <a href="<?= BASE_URL ?>productos/crear" class="btn btn-success">
+    <a href="<?= BASE_URL ?>admin/productos/crear" class="btn btn-success">
         + Nuevo Producto
     </a>
 </div>
@@ -94,10 +94,10 @@
                 </td>
 
                 <td>
-                    <a href="<?= BASE_URL ?>productos/editar/<?= $p['id'] ?>" 
+                    <a href="<?= BASE_URL ?>admin/productos/editar/<?= $p['id'] ?>" 
                        class="btn btn-primary btn-sm">Editar</a>
 
-                    <a href="<?= BASE_URL ?>productos/eliminar/<?= $p['id'] ?>" 
+                    <a href="<?= BASE_URL ?>admin/productos/eliminar/<?= $p['id'] ?>" 
                        class="btn btn-danger btn-sm"
                        onclick="return confirm('¿Eliminar producto?')">
                        Eliminar
@@ -171,7 +171,7 @@ document.querySelectorAll('.estado-switch').forEach(sw => {
         const formData = new FormData();
         formData.append('estado', estado);
 
-        await fetch("<?= BASE_URL ?>productos/cambiarEstado/" + id, {
+        await fetch("<?= BASE_URL ?>admin/productos/cambiarEstado/" + id, {
             method: "POST",
             body: formData
         });
