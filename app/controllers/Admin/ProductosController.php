@@ -2,18 +2,17 @@
 
 namespace Admin;
 
+require_once __DIR__ . "/../../core/Controller.php";
+
+
 class ProductosController extends \Controller
 {
     private $producto;
 
     public function __construct()
     {
-        AuthMiddleware::requireAdmin();
-    }
-
-    public function __construct()
-    {
         $this->producto = new \Producto();
+        AuthMiddleware::requireAdmin();
     }
 
     /* ADMIN LISTADO */

@@ -1,5 +1,11 @@
+<?php
+
+// Rutas públicas
 Router::get("", "HomeController@index");
 Router::get("tienda", "ProductosController@tienda");
+
+// Opcional: /productos redirige a /tienda
+Router::get("productos", "ProductosController@tienda");
 
 Router::get("login", "AuthController@login");
 Router::post("login", "AuthController@procesarLogin");
@@ -15,11 +21,12 @@ Router::get("pedidos/checkout", "PedidosController@checkout");
 Router::post("pedidos/procesar", "PedidosController@procesar");
 Router::get("pedidos/confirmacion/{id}", "PedidosController@confirmacion");
 
+// Rutas admin
 Router::group("admin", function() {
 
     Router::groupGet("dashboard", "Admin\\DashboardController@index");
 
-    // Productos
+    // Productos admin
     Router::groupGet("productos", "Admin\\ProductosController@index");
     Router::groupGet("productos/crear", "Admin\\ProductosController@crear");
     Router::groupPost("productos/guardar", "Admin\\ProductosController@guardar");
@@ -27,7 +34,7 @@ Router::group("admin", function() {
     Router::groupPost("productos/actualizar/{id}", "Admin\\ProductosController@actualizar");
     Router::groupGet("productos/eliminar/{id}", "Admin\\ProductosController@eliminar");
 
-    // Categorías
+    // Categorías admin
     Router::groupGet("categorias", "Admin\\CategoriasController@index");
     Router::groupGet("categorias/crear", "Admin\\CategoriasController@crear");
     Router::groupPost("categorias/guardar", "Admin\\CategoriasController@guardar");
