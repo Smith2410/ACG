@@ -9,6 +9,11 @@ class PedidosController extends \Controller
 
     public function __construct()
     {
+        AuthMiddleware::requireAdmin();
+    }
+
+    public function __construct()
+    {
         $this->pedidoModel  = new \Pedido();
         $this->detalleModel = new \PedidoDetalle();
     }

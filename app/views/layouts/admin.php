@@ -38,6 +38,9 @@
         <a href="<?= BASE_URL ?>admin/categorias"><i class="bi bi-tags"></i> Categorías</a>
         <a href="<?= BASE_URL ?>admin/pedidos"><i class="bi bi-receipt"></i> Pedidos</a>
         <a href="<?= BASE_URL ?>admin/repartidores"><i class="bi bi-truck"></i> Repartidores</a>
+        <a href="<?= BASE_URL ?>admin/usuarios"><i class="bi bi-truck"></i> Usuarios</a>
+
+        <a href="<?= BASE_URL ?>logout" class="btn btn-outline-danger">Salir</a>
     </div>
 
     <div class="content">

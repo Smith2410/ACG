@@ -4,6 +4,11 @@ namespace Admin;
 
 class DashboardController extends \Controller
 {
+    public function __construct()
+    {
+        AuthMiddleware::requireAdmin();
+    }
+    
     public function index()
     {
         $productoModel = new \Producto();

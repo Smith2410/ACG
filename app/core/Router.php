@@ -1,60 +1,84 @@
 <?php
+
 class Router
 {
+    private static array $routes = [];
+    private static string $groupPrefix = "";
+
+    /** Registrar Ruta GET */
+    public static function get(string $uri, string $action)
+    {
+        $final = trim(self::$groupPrefix . "/" . $uri, "/");
+        self::$routes["GET"][$final] = $action;
+    }
+
+    /** Registrar Ruta POST */
+    public static function post(string $uri, string $action)
+    {
+        $final = trim(self::$groupPrefix . "/" . $uri, "/");
+        self::$routes["POST"][$final] = $action;
+    }
+
+    /** Grupos de rutas estilo Laravel */
+    public static function group(string $prefix, callable $callback)
+    {
+        $old = self::$groupPrefix;
+        self::$groupPrefix = trim($old . "/" . $prefix, "/");
+
+        $callback();
+
+        self::$groupPrefix = $old;
+    }
+
+    /** Resolver la ruta */
     public static function dispatch()
     {
-        $url = $_GET['url'] ?? "";
-        $url = trim($url, "/");
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $uri = $_GET["url"] ?? "";
+        $uri = trim($uri, "/");
 
-        if ($url === "") {
-            $controllerClass = "HomeController";
-            $method = "index";
-            $params = [];
-            $controllerFile = __DIR__ . "/../controllers/$controllerClass.php";
-        } else {
-            $segments = explode("/", $url);
+        echo "<pre>DEBUG URI: '$uri'</pre>";
 
-            // If first segment is a folder under controllers (Admin, Cliente, Api, etc.)
-            $first = ucfirst($segments[0]);
-            if (is_dir(__DIR__ . "/../controllers/" . $first)) {
-                $namespace = $first;
-                array_shift($segments); // remove namespace
-                $ctrl = isset($segments[0]) && $segments[0] !== "" ? ucfirst($segments[0]) . "Controller" : "DashboardController";
-                array_shift($segments);
-                $controllerFile = __DIR__ . "/../controllers/$namespace/$ctrl.php";
-                $controllerClass = $namespace . "\\" . $ctrl;
-            } else {
-                // root controllers
-                $ctrl = isset($segments[0]) && $segments[0] !== "" ? ucfirst($segments[0]) . "Controller" : "HomeController";
-                array_shift($segments);
-                $controllerFile = __DIR__ . "/../controllers/$ctrl.php";
-                $controllerClass = $ctrl;
+        $routes = self::$routes[$requestMethod] ?? [];
+
+        foreach ($routes as $route => $action) {
+
+            // Convertir {id} → regex
+            $pattern = preg_replace('/\{([^\}]+)\}/', '([0-9a-zA-Z\-_]+)', $route);
+            $pattern = "#^" . trim($pattern, "/") . "$#";
+
+            if (preg_match($pattern, $uri, $matches)) {
+
+                array_shift($matches);
+
+                list($controller, $method) = explode("@", $action);
+
+                // Convertir namespace a rutas
+                $filePath = str_replace("\\", "/", $controller);
+                $controllerFile = __DIR__ . "/../controllers/" . $filePath . ".php";
+
+                if (!file_exists($controllerFile)) {
+                    die("Controlador no encontrado: $controllerFile");
+                }
+
+                require_once $controllerFile;
+
+                if (!class_exists($controller)) {
+                    die("Clase no encontrada: $controller");
+                }
+
+                $instance = new $controller();
+
+                if (!method_exists($instance, $method)) {
+                    die("Método no encontrado: $method");
+                }
+
+                return call_user_func_array([$instance, $method], $matches);
             }
-
-            $method = $segments[0] ?? "index";
-            array_shift($segments);
-            $params = $segments;
         }
 
-        if (!file_exists($controllerFile)) {
-            http_response_code(404);
-            die("Controlador no encontrado: $controllerClass (file: $controllerFile)");
-        }
-
-        require_once $controllerFile;
-
-        if (!class_exists($controllerClass)) {
-            http_response_code(500);
-            die("Clase controlador no encontrada: $controllerClass");
-        }
-
-        $controller = new $controllerClass();
-
-        if (!method_exists($controller, $method)) {
-            http_response_code(404);
-            die("Método no encontrado: $method");
-        }
-
-        return call_user_func_array([$controller, $method], $params);
+        http_response_code(404);
+        echo "<h1>404 - Página no encontrada</h1>";
+        exit;
     }
 }

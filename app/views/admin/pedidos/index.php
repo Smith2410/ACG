@@ -2,24 +2,6 @@
     <h3 class="fw-bold">Gestión de Pedidos</h3>
 </div>
 
-<!-- FILTRO -->
-<div class="mb-3">
-    <form class="row g-2">
-        <div class="col-auto">
-            <select name="estado" class="form-select">
-                <option value="">Todos</option>
-                <option value="pendiente"   <?= $estado=='pendiente'?'selected':'' ?>>Pendiente</option>
-                <option value="preparando"  <?= $estado=='preparando'?'selected':'' ?>>Preparando</option>
-                <option value="camino"      <?= $estado=='camino'?'selected':'' ?>>En camino</option>
-                <option value="entregado"   <?= $estado=='entregado'?'selected':'' ?>>Entregado</option>
-            </select>
-        </div>
-        <div class="col-auto">
-            <button class="btn btn-primary"><i class="bi bi-funnel"></i> Filtrar</button>
-        </div>
-    </form>
-</div>
-
 <!-- Tabla -->
 <div class="table-responsive bg-white shadow-sm p-3 rounded-3">
 

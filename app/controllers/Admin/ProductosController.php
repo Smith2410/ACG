@@ -8,6 +8,11 @@ class ProductosController extends \Controller
 
     public function __construct()
     {
+        AuthMiddleware::requireAdmin();
+    }
+
+    public function __construct()
+    {
         $this->producto = new \Producto();
     }
 

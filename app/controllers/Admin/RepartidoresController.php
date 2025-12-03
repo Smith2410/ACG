@@ -9,6 +9,11 @@ class RepartidoresController extends \Controller
 
     public function __construct()
     {
+        AuthMiddleware::requireAdmin();
+    }
+
+    public function __construct()
+    {
         $this->pedidoModel = new \Pedido();
         $this->detalleModel = new \PedidoDetalle();
     }
